@@ -17,7 +17,9 @@
 //#include <bits/stdc++.h>
 #include <pthread.h>
 #include <iostream>
-#include <math.h> 
+#include <math.h>
+#include <deque>
+#include <thread>
 using namespace std;
 extern int MAX_THREADS;
 extern int step_i;
@@ -74,6 +76,18 @@ struct arg_struct {
     Matrix B;
     Matrix C;
 
+};
+
+struct tile_arg_struct {
+    Matrix A;
+    Matrix B;
+    Matrix C;
+    int n_lower;
+    int n_upper;
+    int m_lower;
+    int m_upper;
+    int k_lower;
+    int k_upper;
 };
 
 template <class T>
@@ -144,7 +158,7 @@ void parallel_gemm(Matrix matA, Matrix matB, Matrix matC, int N, int M, int k, T
     // Creating four threads, each evaluating its own part
     for (int i = 0; i < MAX_THREADS; i++)
     {
-        printf("Creating user thread: %d\n", i);
+        //printf("Creating user thread: %d\n", i);
         pthread_create(&threads[i], NULL, *matrix_multiply, (void *)data );
     }
     cout << endl;
@@ -155,11 +169,77 @@ void parallel_gemm(Matrix matA, Matrix matB, Matrix matC, int N, int M, int k, T
         pthread_join(threads[i], NULL);
     }
 
-    matA.print((char*) "matA via naive Parallel");
-    matB.print((char*) "matB via naive Parallel");
-    matC.print((char*) "matC via naive Parallel");
+//    matA.print((char*) "matA via naive Parallel");
+//    matB.print((char*) "matB via naive Parallel");
+//    matC.print((char*) "matC via naive Parallel");
     
     
+}
+
+void* tile_multiply(void * arguments) {
+    struct tile_arg_struct *args = (struct tile_arg_struct*)arguments;
+    Matrix A = args -> A;
+    Matrix B = args -> B;
+    Matrix C = args -> C;
+    int n_lower = args -> n_lower;
+    int n_upper = args -> n_upper;
+    int m_lower = args -> m_lower;
+    int m_upper = args -> m_upper;
+    int k_lower = args -> k_lower;
+    int k_upper = args -> k_upper;
+    for (int n = n_lower; n <= n_upper; n++) {
+        for (int m = m_lower; m <= m_upper; m++) {
+            double sum = 0;
+            for (int k = k_lower; k <= k_upper; k++) {
+                sum += A.elements[n][k] * B.elements[k][m];
+            }
+            C.elements[n][m] += sum;
+        }
+    }
+    pthread_exit(0);
+}
+
+template <class T>
+void parallel_gemm_tiled(Matrix A, Matrix B, Matrix C, int N, int M, int k, T alpha, T beta) {
+    const int coreCount = thread::hardware_concurrency();
+    const int blockSize = 4096; // This was the block size in my machine.
+    // Number of elements in each block. Float = 1024 Double = 512
+    const int elementsPerBlock = blockSize / sizeof(alpha);
+    deque<pthread_t> tids;
+    for (int i = 0; i < N; i+= elementsPerBlock) {
+        for (int j = 0; j < N; j+= elementsPerBlock) {
+            for (int k = 0; k < N; k+= elementsPerBlock) {
+
+                // Spin off a new thread here to handle this execution
+                // need to check that we havent gone over our max number of threads:
+                struct tile_arg_struct *args;
+                args = (tile_arg_struct*)malloc(sizeof(tile_arg_struct));
+                args -> A = A; args -> B = B; args -> C = C;
+                args -> n_upper = min(i + elementsPerBlock - 1, N - 1);
+                args -> m_upper = min(j + elementsPerBlock - 1, N - 1);
+                args -> k_upper = min(k + elementsPerBlock - 1, N - 1);
+                args -> n_lower = i;
+                args -> m_lower = j;
+                args -> k_lower = k;
+
+                if (tids.size() >= coreCount) {
+                    pthread_join(tids.back(), NULL);
+                    tids.pop_back();
+                }
+                pthread_attr_t attr;
+                pthread_t tid;
+                pthread_attr_init(&attr);
+                pthread_create(&tid, &attr, tile_multiply,
+                               reinterpret_cast<void *>(args));
+                tids.push_front(tid);
+            }
+        }
+    }
+    int size = tids.size();
+    for (int i = 0; i < size; i++) {
+        pthread_join(tids.back(), NULL);
+        tids.pop_back();
+    }
 }
 
 // Transforms a 1-d array into a multidimensional array
@@ -207,7 +287,7 @@ void initialize_matrix(int N, int M, T* A, T value = 1)
     {
         if( value == 1 )
         {
-            A[i] = rand( );
+            A[i] = rand( ) % 10;
 
         }
         else
@@ -227,7 +307,6 @@ T calc_residual(T* C, Matrix matC, int N, int M)
     matC_seq.size = N;
     matC_seq.initialize_matrix(0);
     to_multidimension(C, matC_seq, N);
-    
     double sum = 0;
     for (int i = 0; i < N; i++)
     {

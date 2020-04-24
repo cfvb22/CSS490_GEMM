@@ -48,7 +48,7 @@ int step_i = 0;
 
 
 int main(int argc, const char * argv[]) {
-    clock_t start_seq, stop_seq, start_parallel, stop_parallel;
+    clock_t start_seq, stop_seq, start_parallel, stop_parallel, start_parallel_tiled, stop_parallel_tiled;
     int N;
     double* A;
     double* B;
@@ -77,7 +77,7 @@ int main(int argc, const char * argv[]) {
     beta = 0;
     incx = 1;
     incy = 1;
-    LOOP_COUNT = 10;
+    LOOP_COUNT = 1;
     
     // Allocates memory
     A = (double*) malloc( N * N * sizeof(double) );
@@ -93,15 +93,17 @@ int main(int argc, const char * argv[]) {
     // Turn 1d arrays into multidimensional arrays to be used in
     // our dgemm parallel implementation
     // declare the new matrix objects of size N
-    Matrix matA, matB, matC;
+    Matrix matA, matB, matC, matD;
     matA.size = N;
     matB.size = N;
     matC.size = N;
+    matD.size = N;
     
     // initializes all three matrices with zeroes
     matA.initialize_matrix(0);
     matB.initialize_matrix(0);
     matC.initialize_matrix(0);
+    matD.initialize_matrix(0);
     
     // converts the arrays generated previously into N x N matrices
     to_multidimension(A, matA, N);
@@ -130,13 +132,22 @@ int main(int argc, const char * argv[]) {
     }
     stop_parallel = clock();
 
-    // Computes avg execution time of sequential gemv
+    // Computes the average execution time of parallel gemm tiled
+    start_parallel_tiled = clock();
+    for (int i = 0; i < LOOP_COUNT; i++) {
+
+        parallel_gemm_tiled(matA, matB, matD, N, N, N, alpha, beta);
+    }
+    stop_parallel_tiled = clock();
+
+    // Computes avg execution time of parallel gemm
     double parallel_time_avg = (stop_parallel - start_parallel) / ( LOOP_COUNT * (double)CLOCKS_PER_SEC );
     
-  
-    
-    // Computes avg execution time of sequential gemv
+    // Computes avg execution time of sequential gemm
     double seq_time_avg = (stop_seq - start_seq) / ( LOOP_COUNT * (double)CLOCKS_PER_SEC );
+
+    // Computes avg execution time of parallel tiled gemm
+    double parallel_tiled_time_avg = (stop_parallel_tiled - start_parallel_tiled) / (LOOP_COUNT * (double) CLOCKS_PER_SEC);
 
     // Computes gFlop
     double gflop = (2.0 * N * N * N) * 1E-9;
@@ -144,10 +155,10 @@ int main(int argc, const char * argv[]) {
     
     double sum_sq_residual = calc_residual(C, matC, N, N);
     
-    print_matrix<double>(N, (char *)"A", A);
-    print_matrix<double>(N, (char *)"B", B);
-    print_matrix<double>(N, (char *)"C", C);
-    
+//    print_matrix<double>(N, (char *)"A", A);
+//    print_matrix<double>(N, (char *)"B", B);
+//    print_matrix<double>(N, (char *)"C", C);
+//    print_matrix(N, (char *) "D", matC);
     //const int con_threads = thread::hardware_concurrency();
     cout << "Number of concurrent threads supported are: "
          << MAX_THREADS << endl << endl;
@@ -171,14 +182,21 @@ int main(int argc, const char * argv[]) {
     // Calculating GFlops
     printf("\tGFLOP                    :  %.5f\n ", gflop);
     printf("\tGFLOP / sec              :  %.5f  GFlops\n", gflop / parallel_time_avg);
-    
-    printf("\nThe sum of squared residual  :  %f\n" , sum_sq_residual);
+
+    printf ("2) Parallel Implementation Tiled\n");
+    printf("\tAvg execution time       :  %f secs\n" ,parallel_tiled_time_avg);
+    // Calculating GFlops
+    printf("\tGFLOP                    :  %.5f\n ", gflop);
+    printf("\tGFLOP / sec              :  %.5f  GFlops\n", gflop / parallel_tiled_time_avg);
+
+    // With three different matrices we should change this so we dont just compare
+    // two matrices but all three
+    //printf("\nThe sum of squared residual  :  %f\n" , sum_sq_residual);
     
     // Deallocates memory
     free(A);
     free(B);
     free(C);
-    
     
     printf ("\n*** Program completed. *** \n\n");
     
