@@ -77,7 +77,7 @@ int main(int argc, const char * argv[]) {
     beta = 0;
     incx = 1;
     incy = 1;
-    LOOP_COUNT = 1;
+    LOOP_COUNT = 10;
     
     // Allocates memory
     A = (double*) malloc( N * N * sizeof(double) );
