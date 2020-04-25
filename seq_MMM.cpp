@@ -36,10 +36,7 @@ using namespace std;
 #include <thread>
 #include <pthread.h>
 
-// maximum size of matrix
 
-//#define MAX 4
-//int MAX = thread::hardware_concurrency();
 // maximum number of threads
 int MAX = 4;
 int MAX_THREADS = thread::hardware_concurrency();
@@ -47,8 +44,10 @@ int MAX_THREADS = thread::hardware_concurrency();
 int step_i = 0;
 
 
+
+
 int main(int argc, const char * argv[]) {
-    clock_t start_seq, stop_seq, start_parallel, stop_parallel, start_parallel_tiled, stop_parallel_tiled;
+    clock_t start_seq, stop_seq, start_parallel, stop_parallel, start_parallel_tiled, stop_parallel_tiled, start_MKL, stop_MKL;
     int N;
     double* A;
     double* B;
@@ -79,7 +78,7 @@ int main(int argc, const char * argv[]) {
     incy = 1;
     LOOP_COUNT = 1;
     
-    // Allocates memory
+    // Allocates memory for matrices used for CBlas
     A = (double*) malloc( N * N * sizeof(double) );
     B = (double*) malloc( N * N * sizeof(double) );
     C = (double*) malloc( N * N * sizeof(double) );
@@ -91,19 +90,21 @@ int main(int argc, const char * argv[]) {
     
     
     // Turn 1d arrays into multidimensional arrays to be used in
-    // our dgemm parallel implementation
+    // our dgemm parallel and sequential implementation
     // declare the new matrix objects of size N
-    Matrix matA, matB, matC, matD;
+    Matrix matA, matB, matC, matD, matE;
     matA.size = N;
     matB.size = N;
     matC.size = N;
     matD.size = N;
+    matE.size = N;
     
     // initializes all three matrices with zeroes
     matA.initialize_matrix(0);
     matB.initialize_matrix(0);
     matC.initialize_matrix(0);
     matD.initialize_matrix(0);
+    matE.initialize_matrix(0);
     
     // converts the arrays generated previously into N x N matrices
     to_multidimension(A, matA, N);
@@ -116,30 +117,40 @@ int main(int argc, const char * argv[]) {
     start_seq = clock();
     for (int i = 0; i < LOOP_COUNT; i++)
     {
-        seq_gemm(A, B, C, N, N, N, alpha, beta);
-
+        seq_gemm(matA, matB, matC, N, N, N, alpha, beta);
     }
     stop_seq = clock();
     
     
-    // Computes the average execution time of the parallel gemm()
+    // Computes the average execution time of the naive parallel gemm()
     start_parallel = clock();
     
     for (int i = 0; i < LOOP_COUNT; i++)
     {
-        parallel_gemm(matA, matB, matC, N, N, N, alpha, beta);
-
+        parallel_gemm(matA, matB, matD, N, N, N, alpha, beta);
     }
     stop_parallel = clock();
 
+    
     // Computes the average execution time of parallel gemm tiled
     start_parallel_tiled = clock();
     for (int i = 0; i < LOOP_COUNT; i++) {
 
-        parallel_gemm_tiled(matA, matB, matD, N, N, N, alpha, beta);
+        parallel_gemm_tiled(matA, matB, matE, N, N, N, alpha, beta);
     }
     stop_parallel_tiled = clock();
 
+    
+//    // Computes the average execution time of MKL Dgemm
+//    start_MKL = clock();
+//    for (int i = 0; i < LOOP_COUNT; i++)
+//    {
+//        cblas_dgemm(CblasRowMajor,CblasNoTrans,CblasNoTrans,N,N,N,alpha,A,N,B,N,beta,C,N);
+//    }
+//    stop_MKL = clock();
+    
+    
+    
     // Computes avg execution time of parallel gemm
     double parallel_time_avg = (stop_parallel - start_parallel) / ( LOOP_COUNT * (double)CLOCKS_PER_SEC );
     
@@ -149,23 +160,33 @@ int main(int argc, const char * argv[]) {
     // Computes avg execution time of parallel tiled gemm
     double parallel_tiled_time_avg = (stop_parallel_tiled - start_parallel_tiled) / (LOOP_COUNT * (double) CLOCKS_PER_SEC);
 
+
+//    // Computes and records MKL dgemm execution time
+//    double MKL_time_avg = (stop_MKL - start_MKL) / ( LOOP_COUNT * (double)CLOCKS_PER_SEC );
+    
+
     // Computes gFlop
     double gflop = (2.0 * N * N * N) * 1E-9;
     
     
-    double sum_sq_residual = calc_residual(C, matC, N, N);
+    //double sum_sq_residual = calc_residual(C, matC, N, N);
     
+    
+//    // Prints matrices for testing purposes
 //    print_matrix<double>(N, (char *)"A", A);
+//    matA.print((char *)"A");
 //    print_matrix<double>(N, (char *)"B", B);
-//    print_matrix<double>(N, (char *)"C", C);
-//    print_matrix(N, (char *) "D", matC);
-    //const int con_threads = thread::hardware_concurrency();
+//    matB.print((char *)"B");
+//    print_matrix<double>(N, (char *)"Cblas-C", C);
+//    matC.print((char *)"C");
+//    matD.print((char *)"D");
+//    matE.print((char *)"E");
+    
     cout << "Number of concurrent threads supported are: "
          << MAX_THREADS << endl << endl;
     
     
     printf("\n\nComparing Performance between Parallel and Sequential GEMM\n");
-    //printf("Computing the Performance of Sequential GEMM\n");
     printf("-----------------------------------------------------------\n");
     printf("Number of reps             :  %d\n", LOOP_COUNT);
     printf("Matrix dimension           :  %d\n", N);
@@ -183,12 +204,24 @@ int main(int argc, const char * argv[]) {
     printf("\tGFLOP                    :  %.5f\n ", gflop);
     printf("\tGFLOP / sec              :  %.5f  GFlops\n", gflop / parallel_time_avg);
 
-    printf ("2) Parallel Implementation Tiled\n");
+    printf ("3) Parallel Implementation Tiled\n");
     printf("\tAvg execution time       :  %f secs\n" ,parallel_tiled_time_avg);
     // Calculating GFlops
     printf("\tGFLOP                    :  %.5f\n ", gflop);
     printf("\tGFLOP / sec              :  %.5f  GFlops\n", gflop / parallel_tiled_time_avg);
+    
+    
+    
+//    printf ("4) MKL Implementation \n");
+//    printf("\tAvg execution time       :  %f secs\n" ,MKL_time_avg);
+//    // Calculating GFlops
+//    printf("\tGFLOP                    :  %.5f\n ", gflop);
+//    printf("\tGFLOP / sec              :  %.5f  GFlops\n", gflop / MKL_time_avg);
 
+
+    
+    
+    
     // With three different matrices we should change this so we dont just compare
     // two matrices but all three
     //printf("\nThe sum of squared residual  :  %f\n" , sum_sq_residual);
@@ -197,8 +230,14 @@ int main(int argc, const char * argv[]) {
     free(A);
     free(B);
     free(C);
+    matA.deallocate_matrix();
+    matB.deallocate_matrix();
+    matC.deallocate_matrix();
+    matD.deallocate_matrix();
+    matE.deallocate_matrix();
     
     printf ("\n*** Program completed. *** \n\n");
     
     return 0;
 }
+
