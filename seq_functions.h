@@ -52,6 +52,17 @@ struct Matrix {
             }
         }
     }
+    void deallocate_matrix()
+    {
+        //cout << "Deallocating memory..." << endl;
+        //Free each sub-array
+        for(int i = 0; i < size; i++)
+        {
+            delete[] elements[i];
+        }
+        //Free the array of pointers
+        delete[] elements;
+    }
     
     // Prints out the matrix to the console
     void print(char * name) {
@@ -90,25 +101,46 @@ struct tile_arg_struct {
     int k_upper;
 };
 
+//template <class T>
+//void seq_gemm(T *A, T *B, T *C, int N, int M, int k, T alpha, T beta)
+//{
+//    for (int i = 0; i < N; i++)
+//    {
+//        for (int j = 0; j < M; j++)
+//        {
+//
+//            C[i*N + j] = beta * C[i*N + j];
+//            // Compute an element of the output matrix
+//            for (int l = 0; l < k; l++)
+//            {
+//                C[i*N + j] = C[i*N + j] + alpha*A[i*N + l] * B[l*k + j];
+//
+//            }
+//        }
+//    }
+//
+//}
+
 template <class T>
-void seq_gemm(T *A, T *B, T *C, int N, int M, int k, T alpha, T beta)
+void seq_gemm(Matrix A, Matrix B, Matrix C, int N, int M, int k, T alpha, T beta)
 {
     for (int i = 0; i < N; i++)
     {
         for (int j = 0; j < M; j++)
         {
-
-            C[i*N + j] = beta * C[i*N + j];
+            
+            C.elements[i][j] = beta * C.elements[i][j];
             // Compute an element of the output matrix
             for (int l = 0; l < k; l++)
             {
-                C[i*N + j] = C[i*N + j] + alpha*A[i*N + l] * B[l*k + j];
-
+                C.elements[i][j] = C.elements[i][j] + alpha* A.elements[i][l] * B.elements[l][j];
+                
             }
         }
     }
     
 }
+
 
 // matrix multiply helper method for naive parallel method
 void *matrix_multiply(void *data)
@@ -287,7 +319,7 @@ void initialize_matrix(int N, int M, T* A, T value = 1)
     {
         if( value == 1 )
         {
-            A[i] = rand( ) % 10;
+            A[i] = rand( );
 
         }
         else
@@ -318,12 +350,7 @@ T calc_residual(T* C, Matrix matC, int N, int M)
     }
     return sum;
     
-//    double sum = 0;
-//    for (int i = 0; i < N * M; i++)
-//    {
-//        sum += pow((A[i] - B[i]), 2);
-//    }
-//    return sum;
+
 }
 
 
