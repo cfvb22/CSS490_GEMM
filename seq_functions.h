@@ -296,7 +296,7 @@ void print_matrix(int N, char * name, double* array)
     {
         for (int j= 0; j < N; j++)
         {
-            printf("%g\t",array[N*i+j]);
+            printf("%.6f\t",array[N*i+j]);
         }
         cout << endl;
     }

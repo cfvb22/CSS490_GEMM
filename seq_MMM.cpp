@@ -80,7 +80,7 @@ int main(int argc, const char * argv[]) {
     beta = 0;
     incx = 1;
     incy = 1;
-    LOOP_COUNT = 2;
+    LOOP_COUNT = 3;
     
     // Allocates memory for matrices used for CBlas
     A = (double*) malloc( N * N * sizeof(double) );
@@ -137,8 +137,9 @@ int main(int argc, const char * argv[]) {
     
     // Computes the average execution time of parallel gemm tiled
     start_parallel_tiled = clock();
-    for (int i = 0; i < LOOP_COUNT; i++) {
-
+    for (int i = 0; i < LOOP_COUNT; i++)
+    {
+        matE.initialize_matrix(0);
         parallel_gemm_tiled(matA, matB, matE, N, N, N, alpha, beta);
     }
     stop_parallel_tiled = clock();
@@ -179,10 +180,10 @@ int main(int argc, const char * argv[]) {
 //    matA.print((char *)"A");
 //    //print_matrix<double>(N, (char *)"B", B);
 //    matB.print((char *)"B");
-//    print_matrix<double>(N, (char *)"C - DGEMM Cblas Implementation", C);
-//    matC.print((char *)"C - DGEMM Sequential ");
-//    matD.print((char *)"C - DGEMM Naive Parallel");
-//    matE.print((char *)"C - DGEMM Parallel with Tiling");
+    print_matrix<double>(N, (char *)"C - DGEMM Cblas Implementation", C);
+    matC.print((char *)"C - DGEMM Sequential ");
+    matD.print((char *)"C - DGEMM Naive Parallel");
+    matE.print((char *)"C - DGEMM Parallel with Tiling");
     
     cout << "Number of concurrent threads supported are: "
          << MAX_THREADS << endl << endl;
