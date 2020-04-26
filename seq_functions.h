@@ -35,7 +35,6 @@ struct Matrix {
     void initialize_matrix(int value = 1)
     {
         double denominator = ( (double)( RAND_MAX ) + (double) (1) ) / (double) 500.0;
-
         elements = new double*[size];
         for ( int i = 0; i < size; i++ )
         {
@@ -154,8 +153,6 @@ void *matrix_multiply(void *data)
     Matrix matC = args-> C;
     
     int matrix_Size = matA.size;
-    
-    
     // Each thread computes a fraction of matrix multiplication
     // This fraction depends on the number of cores of the device
     for (int i = core * matrix_Size / MAX_THREADS; i < (core + 1) * matrix_Size / MAX_THREADS; i++)
@@ -172,6 +169,7 @@ void *matrix_multiply(void *data)
             matC.elements[i][j] = result;
         }
     }
+    free(args);
     pthread_exit(0);
 }
 
@@ -180,20 +178,22 @@ void *matrix_multiply(void *data)
 template <class T>
 void parallel_gemm(Matrix matA, Matrix matB, Matrix matC, int N, int M, int k, T alpha, T beta)
 {
-   
-    struct arg_struct *data = (struct arg_struct *) malloc(sizeof(struct arg_struct));
-    data->A = matA;
-    data->B = matB;
-    data->C = matC;
-
     // declares threads based on numbers of threads supported by hardware
     pthread_t threads[MAX_THREADS];
 
     // Creating four threads, each evaluating its own part
     for (int i = 0; i < MAX_THREADS; i++)
     {
+        struct arg_struct *data;
+        data = (arg_struct*) malloc(sizeof(arg_struct));
+        data->A = matA;
+        data->B = matB;
+        data->C = matC;
         //printf("Creating user thread: %d\n", i);
-        pthread_create(&threads[i], NULL, *matrix_multiply, (void *)data );
+        pthread_attr_t attr;
+        pthread_attr_init(&attr);
+        pthread_create(&threads[i], &attr, *matrix_multiply,
+                reinterpret_cast<void *>(data) );
     }
     cout << endl;
     
@@ -202,12 +202,7 @@ void parallel_gemm(Matrix matA, Matrix matB, Matrix matC, int N, int M, int k, T
     {
         pthread_join(threads[i], NULL);
     }
-
-//    matA.print((char*) "matA via naive Parallel");
-//    matB.print((char*) "matB via naive Parallel");
-//    matC.print((char*) "matC via naive Parallel");
-    
-    
+    step_i = 0;
 }
 
 void* tile_multiply(void * arguments) {
@@ -230,6 +225,7 @@ void* tile_multiply(void * arguments) {
             C.elements[n][m] += sum;
         }
     }
+    free(args);
     pthread_exit(0);
 }
 
@@ -260,8 +256,8 @@ void parallel_gemm_tiled(Matrix A, Matrix B, Matrix C, int N, int M, int k, T al
                     pthread_join(tids.back(), NULL);
                     tids.pop_back();
                 }
-                pthread_attr_t attr;
                 pthread_t tid;
+                pthread_attr_t attr;
                 pthread_attr_init(&attr);
                 pthread_create(&tid, &attr, tile_multiply,
                                reinterpret_cast<void *>(args));
@@ -350,6 +346,7 @@ T calc_residual(T* C, Matrix matC, int N, int M)
         }
         
     }
+    matC_seq.deallocate_matrix();
     return sum;
     
 
