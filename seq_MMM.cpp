@@ -1,7 +1,7 @@
 /* *****************************************************************************
  CSS 490    : High Performance Computing
  Instructor : Dr. Parsons
- Written by : Camila Valdebenito
+ Written by : Camila Valdebenito, CJ Hillbrand
  Date       : April 20, 2020
  Lab2
  Sequential Matrix Multiplication
