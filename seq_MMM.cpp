@@ -43,7 +43,7 @@ using namespace std;
 
 // maximum number of threads
 int MAX = 4;
-int MAX_THREADS = thread::hardware_concurrency();
+int MAX_THREADS = 4;//thread::hardware_concurrency();
 // represents the current thread
 int step_i = 0;
 
@@ -93,7 +93,7 @@ int main(int argc, const char * argv[]) {
     initialize_matrix<double>(N, N, C, 0);
     
     
-    // Turn 1d arrays into multidimensional arrays to be used in
+    // Turns 1d arrays into multidimensional arrays to be used in
     // our dgemm parallel and sequential implementation
     // declare the new matrix objects of size N
     Matrix matA, matB, matC, matD, matE;
@@ -117,7 +117,6 @@ int main(int argc, const char * argv[]) {
     
     
     // Computes the average execution time of the sequential gemm()
-    //double seq_time_start = dsecnd();
     start_seq = clock();
     for (int i = 0; i < LOOP_COUNT; i++)
     {

@@ -235,7 +235,7 @@ void* tile_multiply(void * arguments) {
 
 template <class T>
 void parallel_gemm_tiled(Matrix A, Matrix B, Matrix C, int N, int M, int k, T alpha, T beta) {
-    const int coreCount = thread::hardware_concurrency();
+    const int coreCount = MAX_THREADS;//thread::hardware_concurrency();
     const int blockSize = 4096; // This was the block size in my machine.
     // Number of elements in each block. Float = 1024 Double = 512
     const int elementsPerBlock = blockSize / sizeof(alpha);
