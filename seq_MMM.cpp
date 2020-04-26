@@ -9,12 +9,16 @@
  --------------------------------------------------------------------------------
  INSTRUCTIONS
  ------------
- To compile : g++ seq_MMM.cpp
-
+ 
+ To compile :
+ cd /opt/intel/compilers_and_libraries_2020.1.216/mac/bin
+ source compilervars.sh intel64
+ g++ seq_MMM.cpp -lmkl_rt -o Lab2_MM_seq
+ 
  To run     :
  Client can run the file on its own or specify the matric dimension
- 1) ./a.out
- 2) ./a.out [insert N]
+ 1) ./Lab2_MM_seq
+ 2) ./Lab2_MM_seq [insert N]
  -------------------------------------------------------------------------------
  
  Program Description:
@@ -32,7 +36,7 @@
 using namespace std;
 #include <stdio.h>
 #include <stdlib.h>
-//#include <mkl.h>
+#include <mkl.h>
 #include <thread>
 #include <pthread.h>
 
@@ -141,13 +145,13 @@ int main(int argc, const char * argv[]) {
     stop_parallel_tiled = clock();
 
     
-//    // Computes the average execution time of MKL Dgemm
-//    start_MKL = clock();
-//    for (int i = 0; i < LOOP_COUNT; i++)
-//    {
-//        cblas_dgemm(CblasRowMajor,CblasNoTrans,CblasNoTrans,N,N,N,alpha,A,N,B,N,beta,C,N);
-//    }
-//    stop_MKL = clock();
+    // Computes the average execution time of MKL Dgemm
+    start_MKL = clock();
+    for (int i = 0; i < LOOP_COUNT; i++)
+    {
+        cblas_dgemm(CblasRowMajor,CblasNoTrans,CblasNoTrans,N,N,N,alpha,A,N,B,N,beta,C,N);
+    }
+    stop_MKL = clock();
     
     
     
@@ -162,25 +166,24 @@ int main(int argc, const char * argv[]) {
 
 
 //    // Computes and records MKL dgemm execution time
-//    double MKL_time_avg = (stop_MKL - start_MKL) / ( LOOP_COUNT * (double)CLOCKS_PER_SEC );
+    double MKL_time_avg = (stop_MKL - start_MKL) / ( LOOP_COUNT * (double)CLOCKS_PER_SEC );
     
 
     // Computes gFlop
     double gflop = (2.0 * N * N * N) * 1E-9;
     
     
-    //double sum_sq_residual = calc_residual(C, matC, N, N);
     
     
 //    // Prints matrices for testing purposes
-//    print_matrix<double>(N, (char *)"A", A);
+//    //print_matrix<double>(N, (char *)"A", A);
 //    matA.print((char *)"A");
-//    print_matrix<double>(N, (char *)"B", B);
+//    //print_matrix<double>(N, (char *)"B", B);
 //    matB.print((char *)"B");
-//    print_matrix<double>(N, (char *)"Cblas-C", C);
-//    matC.print((char *)"C");
-//    matD.print((char *)"D");
-//    matE.print((char *)"E");
+//    print_matrix<double>(N, (char *)"C - DGEMM Cblas Implementation", C);
+//    matC.print((char *)"C - DGEMM Sequential ");
+//    matD.print((char *)"C - DGEMM Naive Parallel");
+//    matE.print((char *)"C - DGEMM Parallel with Tiling");
     
     cout << "Number of concurrent threads supported are: "
          << MAX_THREADS << endl << endl;
@@ -192,39 +195,34 @@ int main(int argc, const char * argv[]) {
     printf("Matrix dimension           :  %d\n", N);
     printf ("\nPERFORMANCE RESULTS:\n");
     
+    printf ("- BASELINE: MKL Implementation \n");
+    printf("\tAvg execution time       :  %f secs\n" ,MKL_time_avg);
+    // Calculating GFlops
+    printf("\tGFLOP                    :  %.6f\n ", gflop);
+    printf("\tGFLOP / sec              :  %.6f  GFlops\n", gflop / MKL_time_avg);
+    
     printf ("1) Sequential Implementation\n");
+    printf("\tSum of squared residual  :  %f\n", calc_residual(C, matC, N, N));
     printf("\tAvg execution time       :  %f secs\n" ,seq_time_avg);
     // Calculates GFlops
-    printf("\tGFLOP                    :  %.5f\n ", gflop);
-    printf("\tGFLOP / sec              :  %.5f  GFlops\n", gflop / seq_time_avg);
+    printf("\tGFLOP                    :  %.6f\n ", gflop);
+    printf("\tGFLOP / sec              :  %.6f  GFlops\n", gflop / seq_time_avg);
     
-    printf ("2) Parallel Implementation\n");
+    printf ("2) Parallel Implementation (Naive)\n");
+    printf("\tSum of squared residual  :  %f\n", calc_residual(C, matD, N, N));
     printf("\tAvg execution time       :  %f secs\n" ,parallel_time_avg);
     // Calculating GFlops
-    printf("\tGFLOP                    :  %.5f\n ", gflop);
-    printf("\tGFLOP / sec              :  %.5f  GFlops\n", gflop / parallel_time_avg);
+    printf("\tGFLOP                    :  %.6f\n ", gflop);
+    printf("\tGFLOP / sec              :  %.6f  GFlops\n", gflop / parallel_time_avg);
 
-    printf ("3) Parallel Implementation Tiled\n");
+    printf ("3) Parallel Implementation with Tiling\n");
+    printf("\tSum of squared residual  :  %f\n", calc_residual(C, matE, N, N));
     printf("\tAvg execution time       :  %f secs\n" ,parallel_tiled_time_avg);
     // Calculating GFlops
-    printf("\tGFLOP                    :  %.5f\n ", gflop);
-    printf("\tGFLOP / sec              :  %.5f  GFlops\n", gflop / parallel_tiled_time_avg);
+    printf("\tGFLOP                    :  %.6f\n ", gflop);
+    printf("\tGFLOP / sec              :  %.6f  GFlops\n", gflop / parallel_tiled_time_avg);
     
-    
-    
-//    printf ("4) MKL Implementation \n");
-//    printf("\tAvg execution time       :  %f secs\n" ,MKL_time_avg);
-//    // Calculating GFlops
-//    printf("\tGFLOP                    :  %.5f\n ", gflop);
-//    printf("\tGFLOP / sec              :  %.5f  GFlops\n", gflop / MKL_time_avg);
 
-
-    
-    
-    
-    // With three different matrices we should change this so we dont just compare
-    // two matrices but all three
-    //printf("\nThe sum of squared residual  :  %f\n" , sum_sq_residual);
     
     // Deallocates memory
     free(A);
@@ -240,4 +238,5 @@ int main(int argc, const char * argv[]) {
     
     return 0;
 }
+
 

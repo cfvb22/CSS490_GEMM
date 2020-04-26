@@ -34,6 +34,8 @@ struct Matrix {
     // matrix with random numbers
     void initialize_matrix(int value = 1)
     {
+        double denominator = ( (double)( RAND_MAX ) + (double) (1) ) / (double) 500.0;
+
         elements = new double*[size];
         for ( int i = 0; i < size; i++ )
         {
@@ -42,7 +44,7 @@ struct Matrix {
             {
                 if( value == 1 )
                 {
-                    elements[i][j] = rand( );
+                    elements[i][j] = rand( ) / denominator;
                 }
                 else
                 {
@@ -72,7 +74,7 @@ struct Matrix {
             for (int j = 0; j < size; ++j)
             {
                 //cout << elements[i][j] << "\t";
-                printf("%g\t",elements[i][j]);
+                printf("%.6f\t",elements[i][j]);
             }
             cout << endl;
         }
@@ -281,7 +283,6 @@ void to_multidimension ( double* flat_array, Matrix new_Matrix, int N)
         {
             for (int j= 0; j < N; j++)
             {
-                //printf("hey!\t");//,C[MAX*i+j]);
                 new_Matrix.elements[i][j] = flat_array[N * i + j];
             }
         }
@@ -314,12 +315,13 @@ void print_matrix(int N, char * name, double* array)
 template <class T>
 void initialize_matrix(int N, int M, T* A, T value = 1)
 {
+    double denominator = ( (double)( RAND_MAX ) + (double) (1) ) / (double) 500.0;
 
     for ( int i = 0; i < N * M; i++ )
     {
         if( value == 1 )
         {
-            A[i] = rand( );
+            A[i] = rand( ) / denominator;
 
         }
         else
