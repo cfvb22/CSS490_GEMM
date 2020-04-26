@@ -1,7 +1,7 @@
 /* *****************************************************************************
  CSS 490    : High Performance Computing
  Instructor : Dr. Parsons
- Written by : Camila Valdebenito
+ Written by : Camila Valdebenito, CJ Hillbrand
  Date       : April 20, 2020
  Lab 2
  
@@ -102,25 +102,7 @@ struct tile_arg_struct {
     int k_upper;
 };
 
-//template <class T>
-//void seq_gemm(T *A, T *B, T *C, int N, int M, int k, T alpha, T beta)
-//{
-//    for (int i = 0; i < N; i++)
-//    {
-//        for (int j = 0; j < M; j++)
-//        {
-//
-//            C[i*N + j] = beta * C[i*N + j];
-//            // Compute an element of the output matrix
-//            for (int l = 0; l < k; l++)
-//            {
-//                C[i*N + j] = C[i*N + j] + alpha*A[i*N + l] * B[l*k + j];
-//
-//            }
-//        }
-//    }
-//
-//}
+
 
 template <class T>
 void seq_gemm(Matrix A, Matrix B, Matrix C, int N, int M, int k, T alpha, T beta)
