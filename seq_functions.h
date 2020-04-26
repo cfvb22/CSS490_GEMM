@@ -103,6 +103,7 @@ struct tile_arg_struct {
 };
 
 
+
 template <class T>
 void seq_gemm(Matrix A, Matrix B, Matrix C, int N, int M, int k, T alpha, T beta)
 {
