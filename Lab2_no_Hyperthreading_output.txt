@@ -1,0 +1,686 @@
+(base) Camilas-MBP:CSS490_GEMM camilavaldebenito$ g++ seq_MMM.cpp -lmkl_rt -o Lab2_MM_seq
+(base) Camilas-MBP:CSS490_GEMM camilavaldebenito$ for i in {1..19}; do ./Lab2_MM_seq; done
+
+
+>>WELCOME! This program computes the product of two squared matrices.<<
+
+ Enter the matrix size N = 16
+N is set to: 16
+
+
+
+
+Number of concurrent threads supported are: 2
+
+
+
+Comparing Performance between Parallel and Sequential GEMM
+-----------------------------------------------------------
+Number of reps             :  3
+Matrix dimension           :  16
+
+PERFORMANCE RESULTS:
+- BASELINE: MKL Implementation 
+	Avg execution time       :  0.006541 secs
+	GFLOP                    :  0.000008
+ 	GFLOP / sec              :  0.001252  GFlops
+1) Sequential Implementation
+	Sum of squared residual  :  0.000000
+	Avg execution time       :  0.000022 secs
+	GFLOP                    :  0.000008
+ 	GFLOP / sec              :  0.366806  GFlops
+2) Parallel Implementation (Naive)
+	Sum of squared residual  :  0.000000
+	Avg execution time       :  0.000114 secs
+	GFLOP                    :  0.000008
+ 	GFLOP / sec              :  0.071650  GFlops
+3) Parallel Implementation with Tiling
+	Sum of squared residual  :  0.000000
+	Avg execution time       :  0.000074 secs
+	GFLOP                    :  0.000008
+ 	GFLOP / sec              :  0.110703  GFlops
+
+*** Program completed. *** 
+
+
+
+>>WELCOME! This program computes the product of two squared matrices.<<
+
+ Enter the matrix size N = 20
+N is set to: 20
+
+
+
+
+Number of concurrent threads supported are: 2
+
+
+
+Comparing Performance between Parallel and Sequential GEMM
+-----------------------------------------------------------
+Number of reps             :  3
+Matrix dimension           :  20
+
+PERFORMANCE RESULTS:
+- BASELINE: MKL Implementation 
+	Avg execution time       :  0.006817 secs
+	GFLOP                    :  0.000016
+ 	GFLOP / sec              :  0.002347  GFlops
+1) Sequential Implementation
+	Sum of squared residual  :  0.000000
+	Avg execution time       :  0.000076 secs
+	GFLOP                    :  0.000016
+ 	GFLOP / sec              :  0.211454  GFlops
+2) Parallel Implementation (Naive)
+	Sum of squared residual  :  0.000000
+	Avg execution time       :  0.000217 secs
+	GFLOP                    :  0.000016
+ 	GFLOP / sec              :  0.073620  GFlops
+3) Parallel Implementation with Tiling
+	Sum of squared residual  :  0.000000
+	Avg execution time       :  0.000099 secs
+	GFLOP                    :  0.000016
+ 	GFLOP / sec              :  0.161616  GFlops
+
+*** Program completed. *** 
+
+
+
+>>WELCOME! This program computes the product of two squared matrices.<<
+
+ Enter the matrix size N = 24
+N is set to: 24
+
+
+
+
+Number of concurrent threads supported are: 2
+
+
+
+Comparing Performance between Parallel and Sequential GEMM
+-----------------------------------------------------------
+Number of reps             :  3
+Matrix dimension           :  24
+
+PERFORMANCE RESULTS:
+- BASELINE: MKL Implementation 
+	Avg execution time       :  0.007058 secs
+	GFLOP                    :  0.000028
+ 	GFLOP / sec              :  0.003917  GFlops
+1) Sequential Implementation
+	Sum of squared residual  :  0.000000
+	Avg execution time       :  0.000122 secs
+	GFLOP                    :  0.000028
+ 	GFLOP / sec              :  0.227244  GFlops
+2) Parallel Implementation (Naive)
+	Sum of squared residual  :  0.000000
+	Avg execution time       :  0.000248 secs
+	GFLOP                    :  0.000028
+ 	GFLOP / sec              :  0.111484  GFlops
+3) Parallel Implementation with Tiling
+	Sum of squared residual  :  0.000000
+	Avg execution time       :  0.000116 secs
+	GFLOP                    :  0.000028
+ 	GFLOP / sec              :  0.239032  GFlops
+
+*** Program completed. *** 
+
+
+
+>>WELCOME! This program computes the product of two squared matrices.<<
+
+ Enter the matrix size N = 32
+N is set to: 32
+
+
+
+
+Number of concurrent threads supported are: 2
+
+
+
+Comparing Performance between Parallel and Sequential GEMM
+-----------------------------------------------------------
+Number of reps             :  3
+Matrix dimension           :  32
+
+PERFORMANCE RESULTS:
+- BASELINE: MKL Implementation 
+	Avg execution time       :  0.007065 secs
+	GFLOP                    :  0.000066
+ 	GFLOP / sec              :  0.009277  GFlops
+1) Sequential Implementation
+	Sum of squared residual  :  0.000000
+	Avg execution time       :  0.000307 secs
+	GFLOP                    :  0.000066
+ 	GFLOP / sec              :  0.213472  GFlops
+2) Parallel Implementation (Naive)
+	Sum of squared residual  :  0.000000
+	Avg execution time       :  0.000308 secs
+	GFLOP                    :  0.000066
+ 	GFLOP / sec              :  0.212549  GFlops
+3) Parallel Implementation with Tiling
+	Sum of squared residual  :  0.000000
+	Avg execution time       :  0.000191 secs
+	GFLOP                    :  0.000066
+ 	GFLOP / sec              :  0.342523  GFlops
+
+*** Program completed. *** 
+
+
+
+>>WELCOME! This program computes the product of two squared matrices.<<
+
+ Enter the matrix size N = 36
+N is set to: 36
+
+
+
+
+Number of concurrent threads supported are: 2
+
+
+
+Comparing Performance between Parallel and Sequential GEMM
+-----------------------------------------------------------
+Number of reps             :  3
+Matrix dimension           :  36
+
+PERFORMANCE RESULTS:
+- BASELINE: MKL Implementation 
+	Avg execution time       :  0.006605 secs
+	GFLOP                    :  0.000093
+ 	GFLOP / sec              :  0.014128  GFlops
+1) Sequential Implementation
+	Sum of squared residual  :  0.000000
+	Avg execution time       :  0.000430 secs
+	GFLOP                    :  0.000093
+ 	GFLOP / sec              :  0.217173  GFlops
+2) Parallel Implementation (Naive)
+	Sum of squared residual  :  0.000000
+	Avg execution time       :  0.000379 secs
+	GFLOP                    :  0.000093
+ 	GFLOP / sec              :  0.246206  GFlops
+3) Parallel Implementation with Tiling
+	Sum of squared residual  :  0.000000
+	Avg execution time       :  0.000221 secs
+	GFLOP                    :  0.000093
+ 	GFLOP / sec              :  0.421590  GFlops
+
+*** Program completed. *** 
+
+
+
+>>WELCOME! This program computes the product of two squared matrices.<<
+
+ Enter the matrix size N = 72
+N is set to: 72
+
+
+
+
+Number of concurrent threads supported are: 2
+
+
+
+Comparing Performance between Parallel and Sequential GEMM
+-----------------------------------------------------------
+Number of reps             :  3
+Matrix dimension           :  72
+
+PERFORMANCE RESULTS:
+- BASELINE: MKL Implementation 
+	Avg execution time       :  0.007624 secs
+	GFLOP                    :  0.000746
+ 	GFLOP / sec              :  0.097914  GFlops
+1) Sequential Implementation
+	Sum of squared residual  :  0.000000
+	Avg execution time       :  0.002243 secs
+	GFLOP                    :  0.000746
+ 	GFLOP / sec              :  0.332762  GFlops
+2) Parallel Implementation (Naive)
+	Sum of squared residual  :  0.000000
+	Avg execution time       :  0.001684 secs
+	GFLOP                    :  0.000746
+ 	GFLOP / sec              :  0.443287  GFlops
+3) Parallel Implementation with Tiling
+	Sum of squared residual  :  0.000000
+	Avg execution time       :  0.001281 secs
+	GFLOP                    :  0.000746
+ 	GFLOP / sec              :  0.582593  GFlops
+
+*** Program completed. *** 
+
+
+
+>>WELCOME! This program computes the product of two squared matrices.<<
+
+ Enter the matrix size N = 128
+N is set to: 128
+
+
+
+
+Number of concurrent threads supported are: 2
+
+
+
+Comparing Performance between Parallel and Sequential GEMM
+-----------------------------------------------------------
+Number of reps             :  3
+Matrix dimension           :  128
+
+PERFORMANCE RESULTS:
+- BASELINE: MKL Implementation 
+	Avg execution time       :  0.006779 secs
+	GFLOP                    :  0.004194
+ 	GFLOP / sec              :  0.618720  GFlops
+1) Sequential Implementation
+	Sum of squared residual  :  0.000000
+	Avg execution time       :  0.011437 secs
+	GFLOP                    :  0.004194
+ 	GFLOP / sec              :  0.366742  GFlops
+2) Parallel Implementation (Naive)
+	Sum of squared residual  :  0.000000
+	Avg execution time       :  0.008552 secs
+	GFLOP                    :  0.004194
+ 	GFLOP / sec              :  0.490447  GFlops
+3) Parallel Implementation with Tiling
+	Sum of squared residual  :  0.000000
+	Avg execution time       :  0.006793 secs
+	GFLOP                    :  0.004194
+ 	GFLOP / sec              :  0.617475  GFlops
+
+*** Program completed. *** 
+
+
+
+>>WELCOME! This program computes the product of two squared matrices.<<
+
+ Enter the matrix size N = 256
+N is set to: 256
+
+
+
+
+Number of concurrent threads supported are: 2
+
+
+
+Comparing Performance between Parallel and Sequential GEMM
+-----------------------------------------------------------
+Number of reps             :  3
+Matrix dimension           :  256
+
+PERFORMANCE RESULTS:
+- BASELINE: MKL Implementation 
+	Avg execution time       :  0.007394 secs
+	GFLOP                    :  0.033554
+ 	GFLOP / sec              :  4.538267  GFlops
+1) Sequential Implementation
+	Sum of squared residual  :  0.000000
+	Avg execution time       :  0.120320 secs
+	GFLOP                    :  0.033554
+ 	GFLOP / sec              :  0.278877  GFlops
+2) Parallel Implementation (Naive)
+	Sum of squared residual  :  0.000000
+	Avg execution time       :  0.098396 secs
+	GFLOP                    :  0.033554
+ 	GFLOP / sec              :  0.341013  GFlops
+3) Parallel Implementation with Tiling
+	Sum of squared residual  :  0.000000
+	Avg execution time       :  0.078976 secs
+	GFLOP                    :  0.033554
+ 	GFLOP / sec              :  0.424867  GFlops
+
+*** Program completed. *** 
+
+
+
+>>WELCOME! This program computes the product of two squared matrices.<<
+
+ Enter the matrix size N = 400
+N is set to: 400
+
+
+
+
+Number of concurrent threads supported are: 2
+
+
+
+Comparing Performance between Parallel and Sequential GEMM
+-----------------------------------------------------------
+Number of reps             :  3
+Matrix dimension           :  400
+
+PERFORMANCE RESULTS:
+- BASELINE: MKL Implementation 
+	Avg execution time       :  0.009463 secs
+	GFLOP                    :  0.128000
+ 	GFLOP / sec              :  13.526842  GFlops
+1) Sequential Implementation
+	Sum of squared residual  :  0.000000
+	Avg execution time       :  0.411969 secs
+	GFLOP                    :  0.128000
+ 	GFLOP / sec              :  0.310703  GFlops
+2) Parallel Implementation (Naive)
+	Sum of squared residual  :  0.000000
+	Avg execution time       :  0.346413 secs
+	GFLOP                    :  0.128000
+ 	GFLOP / sec              :  0.369501  GFlops
+3) Parallel Implementation with Tiling
+	Sum of squared residual  :  0.000000
+	Avg execution time       :  0.270192 secs
+	GFLOP                    :  0.128000
+ 	GFLOP / sec              :  0.473737  GFlops
+
+*** Program completed. *** 
+
+
+
+>>WELCOME! This program computes the product of two squared matrices.<<
+
+ Enter the matrix size N = 500
+N is set to: 500
+
+
+
+
+Number of concurrent threads supported are: 2
+
+
+
+Comparing Performance between Parallel and Sequential GEMM
+-----------------------------------------------------------
+Number of reps             :  3
+Matrix dimension           :  500
+
+PERFORMANCE RESULTS:
+- BASELINE: MKL Implementation 
+	Avg execution time       :  0.014425 secs
+	GFLOP                    :  0.250000
+ 	GFLOP / sec              :  17.331023  GFlops
+1) Sequential Implementation
+	Sum of squared residual  :  0.000000
+	Avg execution time       :  1.391969 secs
+	GFLOP                    :  0.250000
+ 	GFLOP / sec              :  0.179602  GFlops
+2) Parallel Implementation (Naive)
+	Sum of squared residual  :  0.000000
+	Avg execution time       :  0.968200 secs
+	GFLOP                    :  0.250000
+ 	GFLOP / sec              :  0.258211  GFlops
+3) Parallel Implementation with Tiling
+	Sum of squared residual  :  0.000000
+	Avg execution time       :  0.989004 secs
+	GFLOP                    :  0.250000
+ 	GFLOP / sec              :  0.252779  GFlops
+
+*** Program completed. *** 
+
+
+
+>>WELCOME! This program computes the product of two squared matrices.<<
+
+ Enter the matrix size N = 700
+N is set to: 700
+
+
+
+
+Number of concurrent threads supported are: 2
+
+
+
+Comparing Performance between Parallel and Sequential GEMM
+-----------------------------------------------------------
+Number of reps             :  3
+Matrix dimension           :  700
+
+PERFORMANCE RESULTS:
+- BASELINE: MKL Implementation 
+	Avg execution time       :  0.036292 secs
+	GFLOP                    :  0.686000
+ 	GFLOP / sec              :  18.902064  GFlops
+1) Sequential Implementation
+	Sum of squared residual  :  0.000000
+	Avg execution time       :  3.458776 secs
+	GFLOP                    :  0.686000
+ 	GFLOP / sec              :  0.198336  GFlops
+2) Parallel Implementation (Naive)
+	Sum of squared residual  :  0.000000
+	Avg execution time       :  2.615453 secs
+	GFLOP                    :  0.686000
+ 	GFLOP / sec              :  0.262287  GFlops
+3) Parallel Implementation with Tiling
+	Sum of squared residual  :  0.000000
+	Avg execution time       :  1.892913 secs
+	GFLOP                    :  0.686000
+ 	GFLOP / sec              :  0.362404  GFlops
+
+*** Program completed. *** 
+
+
+
+>>WELCOME! This program computes the product of two squared matrices.<<
+
+ Enter the matrix size N = 900
+N is set to: 900
+
+
+
+
+Number of concurrent threads supported are: 2
+
+
+
+Comparing Performance between Parallel and Sequential GEMM
+-----------------------------------------------------------
+Number of reps             :  3
+Matrix dimension           :  900
+
+PERFORMANCE RESULTS:
+- BASELINE: MKL Implementation 
+	Avg execution time       :  0.051364 secs
+	GFLOP                    :  1.458000
+ 	GFLOP / sec              :  28.385456  GFlops
+1) Sequential Implementation
+	Sum of squared residual  :  0.000000
+	Avg execution time       :  7.535126 secs
+	GFLOP                    :  1.458000
+ 	GFLOP / sec              :  0.193494  GFlops
+2) Parallel Implementation (Naive)
+	Sum of squared residual  :  0.000000
+	Avg execution time       :  5.773622 secs
+	GFLOP                    :  1.458000
+ 	GFLOP / sec              :  0.252528  GFlops
+3) Parallel Implementation with Tiling
+	Sum of squared residual  :  0.000000
+	Avg execution time       :  4.702823 secs
+	GFLOP                    :  1.458000
+ 	GFLOP / sec              :  0.310027  GFlops
+
+*** Program completed. *** 
+
+
+
+>>WELCOME! This program computes the product of two squared matrices.<<
+
+ Enter the matrix size N = 1000
+N is set to: 1000
+
+
+
+
+Number of concurrent threads supported are: 2
+
+
+
+Comparing Performance between Parallel and Sequential GEMM
+-----------------------------------------------------------
+Number of reps             :  3
+Matrix dimension           :  1000
+
+PERFORMANCE RESULTS:
+- BASELINE: MKL Implementation 
+	Avg execution time       :  0.063422 secs
+	GFLOP                    :  2.000000
+ 	GFLOP / sec              :  31.534633  GFlops
+1) Sequential Implementation
+	Sum of squared residual  :  0.000000
+	Avg execution time       :  25.069922 secs
+	GFLOP                    :  2.000000
+ 	GFLOP / sec              :  0.079777  GFlops
+2) Parallel Implementation (Naive)
+	Sum of squared residual  :  0.000000
+	Avg execution time       :  22.196314 secs
+	GFLOP                    :  2.000000
+ 	GFLOP / sec              :  0.090105  GFlops
+3) Parallel Implementation with Tiling
+	Sum of squared residual  :  0.000000
+	Avg execution time       :  10.698379 secs
+	GFLOP                    :  2.000000
+ 	GFLOP / sec              :  0.186944  GFlops
+
+*** Program completed. *** 
+
+
+
+>>WELCOME! This program computes the product of two squared matrices.<<
+
+ Enter the matrix size N = 1300
+N is set to: 1300
+
+
+
+
+Number of concurrent threads supported are: 2
+
+
+
+Comparing Performance between Parallel and Sequential GEMM
+-----------------------------------------------------------
+Number of reps             :  3
+Matrix dimension           :  1300
+
+PERFORMANCE RESULTS:
+- BASELINE: MKL Implementation 
+	Avg execution time       :  0.124879 secs
+	GFLOP                    :  4.394000
+ 	GFLOP / sec              :  35.186154  GFlops
+1) Sequential Implementation
+	Sum of squared residual  :  0.000000
+	Avg execution time       :  26.711969 secs
+	GFLOP                    :  4.394000
+ 	GFLOP / sec              :  0.164496  GFlops
+2) Parallel Implementation (Naive)
+	Sum of squared residual  :  0.000000
+	Avg execution time       :  22.291097 secs
+	GFLOP                    :  4.394000
+ 	GFLOP / sec              :  0.197119  GFlops
+3) Parallel Implementation with Tiling
+	Sum of squared residual  :  3929004661126335.000000
+	Avg execution time       :  16.660511 secs
+	GFLOP                    :  4.394000
+ 	GFLOP / sec              :  0.263737  GFlops
+
+*** Program completed. *** 
+
+
+
+>>WELCOME! This program computes the product of two squared matrices.<<
+
+ Enter the matrix size N = 1500
+N is set to: 1500
+
+
+
+
+Number of concurrent threads supported are: 2
+
+
+
+Comparing Performance between Parallel and Sequential GEMM
+-----------------------------------------------------------
+Number of reps             :  3
+Matrix dimension           :  1500
+
+PERFORMANCE RESULTS:
+- BASELINE: MKL Implementation 
+	Avg execution time       :  0.182596 secs
+	GFLOP                    :  6.750000
+ 	GFLOP / sec              :  36.966923  GFlops
+1) Sequential Implementation
+	Sum of squared residual  :  0.000000
+	Avg execution time       :  88.086620 secs
+	GFLOP                    :  6.750000
+ 	GFLOP / sec              :  0.076629  GFlops
+2) Parallel Implementation (Naive)
+	Sum of squared residual  :  0.000000
+	Avg execution time       :  71.972484 secs
+	GFLOP                    :  6.750000
+ 	GFLOP / sec              :  0.093786  GFlops
+3) Parallel Implementation with Tiling
+	Sum of squared residual  :  926588127385849.500000
+	Avg execution time       :  35.644568 secs
+	GFLOP                    :  6.750000
+ 	GFLOP / sec              :  0.189370  GFlops
+
+*** Program completed. *** 
+
+
+
+>>WELCOME! This program computes the product of two squared matrices.<<
+
+ Enter the matrix size N = 1700
+N is set to: 1700
+
+
+
+
+Number of concurrent threads supported are: 2
+
+
+
+Comparing Performance between Parallel and Sequential GEMM
+-----------------------------------------------------------
+Number of reps             :  3
+Matrix dimension           :  1700
+
+PERFORMANCE RESULTS:
+- BASELINE: MKL Implementation 
+	Avg execution time       :  0.258941 secs
+	GFLOP                    :  9.826000
+ 	GFLOP / sec              :  37.946917  GFlops
+1) Sequential Implementation
+	Sum of squared residual  :  0.000000
+	Avg execution time       :  61.175517 secs
+	GFLOP                    :  9.826000
+ 	GFLOP / sec              :  0.160620  GFlops
+2) Parallel Implementation (Naive)
+	Sum of squared residual  :  0.000000
+	Avg execution time       :  51.980086 secs
+	GFLOP                    :  9.826000
+ 	GFLOP / sec              :  0.189034  GFlops
+3) Parallel Implementation with Tiling
+	Sum of squared residual  :  57665511354803896.000000
+	Avg execution time       :  33.376709 secs
+	GFLOP                    :  9.826000
+ 	GFLOP / sec              :  0.294397  GFlops
+
+*** Program completed. *** 
+
+
+
+>>WELCOME! This program computes the product of two squared matrices.<<
+
+ Enter the matrix size N = 1900
+N is set to: 1900
+
+
+
+
+^C
+(base) Camilas-MBP:CSS490_GEMM camilavaldebenito$ 
